@@ -4,6 +4,8 @@ const mongodb = require("./db/connect");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.set("layout", "./layouts/main");
+app.set("view engine", "ejs");
 
 app
   .use(cors())
