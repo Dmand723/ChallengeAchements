@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const Post = require("../models/Post");
 const User = require("../models/User");
+const adminUser = require("../models/AdminUser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
@@ -50,14 +51,14 @@ router.post("/admin", async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const user = await User.findOne({ username });
+    const user = await adminUser.findOne({ username });
 
     if (!user) {
       return res.status(401).json({ message: "Invalid Credentials" });
     }
 
-    // const token = jwt.sign({ userID: user._id }, jwtSecret);
-    // res.cookie("token", token, { httpOnly: true });
+    const token = jwt.sign({ userID: user._id }, jwtSecret);
+    res.cookie("token", token, { httpOnly: true });
     res.redirect("/dashboard");
   } catch (error) {
     console.log(error);
@@ -90,7 +91,7 @@ router.post("/register", async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     try {
-      const user = await User.create({
+      const user = await adminUser.create({
         username,
         password: hashedPassword,
       });

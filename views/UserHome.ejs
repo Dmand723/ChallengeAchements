@@ -1,0 +1,19 @@
+<body>
+  <h1>User Home Test</h1>
+  <!-- <ul class="article-ul">
+    <% userChallenges.forEach(challenge => { %>
+    <li>
+      <a href="/post/<%= challenge._id %>">
+        <span><%- challenge.title %></span>
+      </a>
+    </li>
+    <% }); %>
+  </ul> -->
+  <div>
+    <% userChallenges.forEach(challenge => { %>
+    <div>
+      <span><%- challenge.title %></span>
+    </div>
+    <% }); %>
+  </div>
+</body>
