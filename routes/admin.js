@@ -11,6 +11,6 @@ routes.post("/create", adminController.createChalenge);
 routes.put("/update/:id", adminController.updateChallenge);
 
 //DELETE Delete challenge
-routes.delete("delete/:id", adminController.deleteChallenge);
+routes.delete("/delete/:id", adminController.deleteChallenge);
 
 module.exports = routes;
