@@ -1,38 +1,10 @@
-</header>
-<div class="author">
-  <h1 class="author__heading">Hello, I'm Dawson</h1>
-  <p class="author__body">Web Developer and Student</p>
-</div>
+<body>
+  <h1>Challenge Achevments Website</h1>
+  <form action="/register">
+    <input type="submit" id="index-signup-btn" value="Sign Up" />
+  </form>
 
-<img src="img/image.jpg" alt="Cool Photo" />
-
-<section class="articles">
-  <h2 class="articles__heading">Latest Posts</h2>
-
-  <!-- Dummy data displayed until we include posts later on.-->
-  <ul class="article-ul">
-    <% data.forEach(post => { %>
-    <li>
-      <a href="/post/<%= post._id %>">
-        <span><%- post.title %></span>
-        <span class="article-list__date">
-          <% post.createdAt.toDateString() %>
-        </span>
-      </a>
-    </li>
-    <% }); %>
-  </ul>
-
-  <% if (nextPage !== null) { %>
-  <a href="/?page=<%= nextPage %>" class="pagination">&lt; View Older Posts</a>
-  <% } %>
-
-  <!-- if prevPage is 1 then go to / -->
-  <% if (prevPage >= 1) { %> <% if (prevPage === 1) { %>
-  <a href="/" class="pagination pagination-newer">View Newer Posts &gt;</a>
-  <% } else { %>
-  <a href="/?page=<%= prevPage %>" class="pagination pagination-newer"
-    >View Newer Posts &gt;</a
-  >
-  <% } %> <% } %>
-</section> 
+  <form action="/login">
+    <input type="submit" id="index-login-btn" value="Login" />
+  </form>
+</body>

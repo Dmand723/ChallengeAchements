@@ -32,10 +32,12 @@ const createChalenge = async (req, res) => {
 const updateChallenge = async (req, res) => {
   try {
     const challengeId = new ObjectId(req.params.id);
-    const challenge = {
-      title: req.body.title,
-      desc: req.body.desc,
-    };
+    // const challenge = {
+    //   title: req.body.title,
+    //   desc: req.body.desc,
+
+    // };
+    const challenge = req.body;
 
     const response = await mongodb
       .getDb()

@@ -344,3 +344,31 @@ ul {
   justify-content: space-between;
   padding: 10px 0;
 }
+/* REAL CSS */
+/* User Home Page */
+/* all current colors are placehodlers */
+.user-add-challenge-btn {
+  color: green;
+  text-decoration: none;
+  display: inline-block;
+  border: 0;
+  text-decoration: none;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  line-height: 3;
+}
+
+#challenge-card-title {
+  font-size: 50px;
+  color: gray;
+}
+
+.challenge-cards {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.challenge-card {
+  background-color: antiquewhite;
+}

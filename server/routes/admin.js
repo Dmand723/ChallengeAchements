@@ -1,75 +1,96 @@
-/**Video 1 part 3 of part 3 assiment */
 const express = require("express");
 const router = express.Router();
 const Post = require("../models/Post");
-const User = require("../models/User");
 const adminUser = require("../models/AdminUser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
 const adminLayout = "../views/layouts/admin.ejs";
 
-/**
- * Check Login Middleware
- */
-const authMiddleware = (req, res, next) => {
-  const token = req.cookies.token;
+// /**
+//  * Check Login Middleware
+//  */
+// const authMiddleware = (req, res, next) => {
+//   const token = req.cookies.token;
 
+//   if (!token) {
+//     return res.status(401).json({ message: "Unauthorized" });
+//   }
+//   try {
+//     const decoded = jwt.verify(token, jwtSecret);
+//     req.userId = decoded.userId;
+//     next();
+//   } catch (error) {
+//     return res.status(401).json({ message: "Unauthorized" });
+//   }
+// };
+const authMiddleware = async (req, res, next) => {
+  const token = req.cookies.token;
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
+
   try {
-    const decoded = jwt.verify(token, jwtSecret);
-    req.userId = decoded.userId;
-    next();
+    let match = false;
+    const adminUsers = await adminUser.find();
+    adminUsers.forEach((user) => {
+      const passwordsMatch = token.password === user.password;
+      if (passwordsMatch) {
+        match = true;
+      }
+    });
+    if (match) {
+      next();
+    } else {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
   } catch (error) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 };
-
 /**
  * GET /
  * Admin - Check Login
  */
-router.get("/admin", async (req, res) => {
-  try {
-    const locals = {
-      title: "Admin",
-      description: "A blog template made with NodeJS and ExpressJS",
-    };
-    res.render("admin/index", { locals, layout: adminLayout });
-  } catch (error) {
-    console.log(error);
-  }
-});
+// router.get("/", async (req, res) => {
+//   try {
+//     const locals = {
+//       title: "Admin",
+//       description: "A blog template made with NodeJS and ExpressJS",
+//     };
+//     res.render("admin/index", { locals, layout: adminLayout });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
 /**
  * POST /login
  * Admin - Login Account
  */
-router.post("/admin", async (req, res) => {
-  try {
-    const { username, password } = req.body;
+// router.post("/", async (req, res) => {
+//   try {
+//     const { username, password } = req.body;
 
-    const user = await adminUser.findOne({ username });
+//     const user = await adminUser.findOne({ username });
 
-    if (!user) {
-      return res.status(401).json({ message: "Invalid Credentials" });
-    }
+//     if (!user) {
+//       return res.status(401).json({ message: "Invalid Credentials" });
+//     }
 
-    const token = jwt.sign({ userID: user._id }, jwtSecret);
-    res.cookie("token", token, { httpOnly: true });
-    res.redirect("/dashboard");
-  } catch (error) {
-    console.log(error);
-  }
-});
+//     const token = jwt.sign({ userID: user._id }, jwtSecret);
+//     res.cookie("token", token, { httpOnly: true });
+//     res.redirect("/admin/dashboard");
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
 /**
  * Get /dashboard
  * Admin - Dashboard
  */
-router.get("/dashboard", authMiddleware, async (req, res) => {
+router.get("/", authMiddleware, async (req, res) => {
   try {
     const locals = {
       title: "dashboard",
@@ -92,7 +113,7 @@ router.post("/register", async (req, res) => {
 
     try {
       const user = await adminUser.create({
-        username,
+        username: username,
         password: hashedPassword,
       });
       res.status(200).json({ message: "User created successfully", user });

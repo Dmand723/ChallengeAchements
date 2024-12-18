@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const challenge = require("../models/challenge");
+const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 //Home Page
 router.get("/", async (req, res) => {
@@ -11,67 +13,70 @@ router.get("/", async (req, res) => {
     };
     const userChallenges = await challenge.find();
 
-    res.render("UserHome", { locals, userChallenges });
+    res.render("index");
   } catch (error) {
     console.log(error);
   }
 });
 
-// // Get Post by Id
-// router.get("/post/:id", async (req, res) => {
-//   try {
-//     let slug = req.params.id;
+router.get("/login", async (req, res) => {
+  res.render("login");
+});
 
-//     const data = await Post.findById({ _id: slug });
+router.get("/register", async (req, res) => {
+  res.render("signUp");
+});
 
-//     const locals = {
-//       title: data.title,
-//       description:
-//         "A blog template application that will be used for your own use.",
-//     };
-//     res.render("post", { locals, data });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
+router.post("/register", async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(hashedPassword);
 
-// //Search Route
-// router.post("/search", async (req, res) => {
-//   try {
-//     const locals = {
-//       title: "Search",
-//       description: "A blog template made with NodeJs and ExoressJS",
-//     };
-//     let searchTerm = req.body.SearchTerm;
-//     console.log(searchTerm);
-//     const searchNoSpecialChar = searchTerm.replace(/[^a-zA-Z ]/g, "");
+    try {
+      const user = await User.create({
+        username: username,
+        password: hashedPassword,
+      });
+      res.status(200).json({ message: "User created successfully", user });
+    } catch (error) {
+      console.log(error);
+      if (error == 11000) {
+        return req.status(500).json({ message: "User already Exists!" });
+      } else {
+        return res
+          .status(500)
+          .json({ message: "Something went wrong with the server! " });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.post("/login", async (req, res) => {
+  try {
+    const { username, password } = req.body;
 
-//     const data = await Post.find({
-//       $or: [
-//         { title: { $regex: new RegExp(searchNoSpecialChar, "i") } },
-//         { body: { $regex: new RegExp(searchNoSpecialChar, "i") } },
-//       ],
-//     });
-//     res.render("search", { locals, data });
-//   } catch (error) {
-//     console.log(error, "Here");
-//   }
-// });
+    const user = await User.findOne({ username });
 
-// //About Page
-// router.get("/about", async (req, res) => {
-//   const locals = {
-//     title: "NodeJS About",
-//     description:
-//       "A blog template application that will be used for your own use.",
-//   };
-
-//   try {
-//     const data = await Post.find().sort({ createdAt: "desc" });
-//     res.render("about", { locals, data });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
-
+    if (!user) {
+      return res.status(401).json({ message: "Invalid Credentials" });
+    }
+    const token = user;
+    res.cookie(`token`, token, { httpOnly: true });
+    res.redirect(`/user/${username}`);
+    // const token = jwt.sign({ userID: user._id }, jwtSecret);
+    // res.cookie("token", token, { httpOnly: true });
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.get("/logout", async (req, res) => {
+  try {
+    res.clearCookie("token");
+    res.redirect("/");
+  } catch (error) {
+    console.log(error);
+  }
+});
 module.exports = router;

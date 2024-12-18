@@ -11,6 +11,14 @@ const challengeSchema = new Schema({
     type: String,
     required: true,
   },
+  category: {
+    type: String,
+    required: true,
+  },
+  released: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("Challenge", challengeSchema);
