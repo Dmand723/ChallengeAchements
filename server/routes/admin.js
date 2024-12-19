@@ -5,6 +5,7 @@ const challenges = require("../models/challenge");
 const adminUser = require("../models/AdminUser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { trusted } = require("mongoose");
 const jwtSecret = process.env.JWT_SECRET;
 const adminLayout = "../views/layouts/admin.ejs";
 
@@ -199,14 +200,7 @@ router.get("/edit-challenge/:id", authMiddleware, async (req, res) => {
       title: "Edit Post",
       description: "A blog template made with NodeJS and ExpressJS",
     };
-    const challenge = await challenges.findOne({ _id: req.params.id });
-    const data = {
-      title: challenge.title,
-      desc: challenge.desc,
-      category: challenge.category,
-      released: challenge.released,
-    };
-    console.log(challenge.released);
+    const data = await challenges.findOne({ _id: req.params.id });
     res.render("admin/edit-challenge", { locals, data, layout: adminLayout });
   } catch (error) {
     console.log(error);
@@ -218,13 +212,17 @@ router.get("/edit-challenge/:id", authMiddleware, async (req, res) => {
  * Admin -Edit Post
  */
 router.put("/edit-challenge/:id", authMiddleware, async (req, res) => {
+  let released;
+  if (req.body.released === "on") {
+    released = true;
+  } else {
+    released = false;
+  }
+  let data = req.body;
+  data.released = released;
   try {
-    await challenge.findByIdAndUpdate(req.params.id, {
-      title: req.body.title,
-      body: req.body.body,
-      updatedAt: Date.now(),
-    });
-    res.redirect("/dashboard");
+    await challenges.findByIdAndUpdate(req.params.id, data);
+    res.redirect("/admin/");
   } catch (error) {
     console.log(error);
   }

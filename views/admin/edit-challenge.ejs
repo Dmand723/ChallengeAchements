@@ -7,7 +7,7 @@
   </form>
 </div>
 
-<form action="/edit-challenge/<%= data._id %>?_method=PUT" method="POST">
+<form action="/admin/edit-challenge/<%= data._id %>?_method=PUT" method="POST">
   <label for="title"><b>Title</b></label>
   <input
     type="text"
@@ -23,7 +23,11 @@
   <input type="text" name="category" value="<%= data.category %>" />
 
   <label for="released">Released</label>
-  <input type="checkbox" name="released" value="true"<%= (data.released === true
-  || data.released === 'true') ? 'checked' : '' %> /><br />
+  <input
+    type="checkbox"
+    name="released"
+    id="edit-challenge-checkbox"
+    value="<%= data.released %>"
+  /><br />
   <input type="submit" value="Update" class="btn" />
 </form>

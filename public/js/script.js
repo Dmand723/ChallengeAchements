@@ -19,3 +19,13 @@
 //     this.setAttribute("aria-expanded", "false");
 //   });
 // });
+
+function editCheckboxFix() {
+  const checkbox = document.querySelector("#edit-challenge-checkbox");
+  if (checkbox.getAttribute("value") == "true") {
+    checkbox.setAttribute("checked", "true");
+  } else {
+    return;
+  }
+}
+editCheckboxFix();

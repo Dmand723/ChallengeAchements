@@ -58,15 +58,15 @@ router.post("/login", async (req, res) => {
     const { username, password } = req.body;
 
     const user = await User.findOne({ username });
-
-    if (!user) {
+    const passwordsMatch = await bcrypt.compare(password, user.password);
+    if (passwordsMatch) {
+      const token = user;
+      res.cookie(`token`, token, { httpOnly: true });
+      res.redirect(`/user/${username}`);
+    }
+    if (!user || !passwordsMatch) {
       return res.status(401).json({ message: "Invalid Credentials" });
     }
-    const token = user;
-    res.cookie(`token`, token, { httpOnly: true });
-    res.redirect(`/user/${username}`);
-    // const token = jwt.sign({ userID: user._id }, jwtSecret);
-    // res.cookie("token", token, { httpOnly: true });
   } catch (error) {
     console.log(error);
   }
