@@ -13,9 +13,8 @@ const authMiddleware = async (req, res, next) => {
   }
   try {
     const user = await User.findOne({ username: req.params.username });
-    const usernameMatch = token.username === user.username;
     const passwordsMatch = token.password === user.password;
-    if (passwordsMatch && usernameMatch) {
+    if (passwordsMatch) {
       next();
     } else {
       return res.status(401).json({ message: "Unauthorized" });

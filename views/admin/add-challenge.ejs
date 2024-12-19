@@ -1,0 +1,20 @@
+<a href="/admin/">&larr; Back</a>
+<div class="admin-title">
+  <h2>Add New Challenge</h2>
+</div>
+
+<form action="/admin/add-challenge/" method="POST">
+  <label for="title"><b>Title</b></label>
+  <input type="text" name="title" placeholder="Challenge Title" />
+
+  <label for="desc"><b>Desc</b></label>
+  <textarea name="desc" cols="50" rows="10"></textarea>
+
+  <label for="category">Category</label>
+  <input type="text" name="category" placeholder="Challenge Category" />
+
+  <label for="released">Released</label>
+  <input type="checkbox" name="released" /><br />
+
+  <input type="submit" value="Add" class="btn" />
+</form>

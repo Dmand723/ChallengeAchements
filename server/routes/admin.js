@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Post = require("../models/Post");
+const challenges = require("../models/challenge");
 const adminUser = require("../models/AdminUser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -96,7 +97,7 @@ router.get("/", authMiddleware, async (req, res) => {
       title: "dashboard",
       description: "A blog template made with NodeJS and ExpressJS",
     };
-    const data = await Post.find();
+    const data = await challenges.find();
     res.render("admin/dashboard", { locals, data, layout: adminLayout });
   } catch (error) {
     console.log(error);
@@ -149,14 +150,14 @@ router.get("/logout", authMiddleware, async (req, res) => {
  * GET /add-post
  * Admin - Create New Post
  */
-router.get("/add-post", authMiddleware, async (req, res) => {
+router.get("/add-challenge", authMiddleware, async (req, res) => {
   try {
     const locals = {
-      title: "Create Post",
-      description: "A blog template made with NodeJS and ExpressJS",
+      title: "Create Challenge",
+      description: "Admin page to add a challenge",
     };
-    const data = await Post.find();
-    res.render("admin/add-post", { locals, data, layout: adminLayout });
+    const data = await challenges.find();
+    res.render("admin/add-challenge", { locals, data, layout: adminLayout });
   } catch (error) {
     console.log(error);
   }
@@ -166,15 +167,23 @@ router.get("/add-post", authMiddleware, async (req, res) => {
  * POST /add-post
  * Admin - Create New Post
  */
-router.post("/add-post/", authMiddleware, async (req, res) => {
+router.post("/add-challenge/", authMiddleware, async (req, res) => {
   try {
     console.log(req.body);
-    const newPost = {
+    let released;
+    if (req.body.released == "on") {
+      released = true;
+    } else {
+      released = false;
+    }
+    const newChallenge = {
       title: req.body.title,
-      body: req.body.body,
+      desc: req.body.desc,
+      category: req.body.category,
+      released: released,
     };
-    await Post.create(newPost);
-    res.redirect("/dashboard");
+    await challenge.create(newChallenge);
+    res.redirect("/admin/");
   } catch (error) {
     console.log(error);
   }
@@ -184,14 +193,21 @@ router.post("/add-post/", authMiddleware, async (req, res) => {
  * Get /edit-post
  * Admin - Update Post
  */
-router.get("/edit-post/:id", authMiddleware, async (req, res) => {
+router.get("/edit-challenge/:id", authMiddleware, async (req, res) => {
   try {
     const locals = {
       title: "Edit Post",
       description: "A blog template made with NodeJS and ExpressJS",
     };
-    const data = await Post.findOne({ _id: req.params.id });
-    res.render("admin/edit-post", { locals, data, layout: adminLayout });
+    const challenge = await challenges.findOne({ _id: req.params.id });
+    const data = {
+      title: challenge.title,
+      desc: challenge.desc,
+      category: challenge.category,
+      released: challenge.released,
+    };
+    console.log(challenge.released);
+    res.render("admin/edit-challenge", { locals, data, layout: adminLayout });
   } catch (error) {
     console.log(error);
   }
@@ -201,9 +217,9 @@ router.get("/edit-post/:id", authMiddleware, async (req, res) => {
  * PUT /edit-post
  * Admin -Edit Post
  */
-router.put("/edit-post/:id", authMiddleware, async (req, res) => {
+router.put("/edit-challenge/:id", authMiddleware, async (req, res) => {
   try {
-    await Post.findByIdAndUpdate(req.params.id, {
+    await challenge.findByIdAndUpdate(req.params.id, {
       title: req.body.title,
       body: req.body.body,
       updatedAt: Date.now(),
