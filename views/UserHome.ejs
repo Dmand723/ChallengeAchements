@@ -1,5 +1,10 @@
 <body>
-  <h1>Challenge Packs</h1>
+  <div class="user-add-challenge-btn-headers">
+    <a href="<%=username%>/acceptChallenges" class="user-add-challenge-btn"
+      >&#43; Add New Challenges</a
+    >
+  </div>
+  <h1>Challenges</h1>
   <div class="challenge-cards">
     <% userChallenges.forEach(challenge => { %>
     <div class="challenge-card">

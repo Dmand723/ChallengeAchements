@@ -10,7 +10,7 @@ const userLayout = "../views/layouts/user.ejs";
 const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "Unauthorized " });
   }
   try {
     const user = await User.findOne({ username: req.params.username });
@@ -18,10 +18,11 @@ const authMiddleware = async (req, res, next) => {
     if (passwordsMatch) {
       next();
     } else {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "Unauthorized " });
     }
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized" });
+    console.log(error);
+    return res.status(401).json({ message: "Unauthorized " });
   }
 };
 router.get("/:username", authMiddleware, async (req, res) => {
@@ -30,8 +31,23 @@ router.get("/:username", authMiddleware, async (req, res) => {
       title: "Home Page",
       description: `A Home Page For user: ${req.params.username}`,
     };
-    const userChallenges = await challenge.find({ released: true });
-    res.render("UserHome", { locals, userChallenges, layout: userLayout });
+    const allChallenges = await challenge.find({});
+    let challengeNameArry = [];
+    allChallenges.forEach((challenge) => {
+      challengeNameArry.push(challenge.title);
+    });
+    let usersData = await userData.findOne({ username: req.params.username });
+    usersData = usersData.acceptedChallenges;
+
+    const userChallenges = await challenge.find({
+      title: { $in: usersData },
+    });
+    res.render("UserHome", {
+      locals,
+      userChallenges,
+      username: req.params.username,
+      layout: userLayout,
+    });
   } catch (error) {
     console.log(error);
   }
@@ -39,10 +55,10 @@ router.get("/:username", authMiddleware, async (req, res) => {
 router.get("/:username/acceptChallenges", authMiddleware, async (req, res) => {
   try {
     const locals = {
-      title: "Accept new chalenges page",
+      title: "New Chalenges",
       description: `Accept new chalenges for user: ${req.params.username}`,
     };
-    const allChallenges = await challenge.find({});
+    const allChallenges = await challenge.find({ released: true });
     let challengeNameArry = [];
     allChallenges.forEach((challenge) => {
       challengeNameArry.push(challenge.title);
@@ -63,4 +79,19 @@ router.get("/:username/acceptChallenges", authMiddleware, async (req, res) => {
     console.log(error);
   }
 });
+router.put(
+  "/:username/addChallenge/:title",
+  authMiddleware,
+  async (req, res) => {
+    try {
+      await userData.findOneAndUpdate(
+        { username: req.params.username },
+        { $push: { acceptedChallenges: req.params.title } }
+      );
+      res.redirect(`/user/${req.params.username}/acceptChallenges`);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 module.exports = router;
