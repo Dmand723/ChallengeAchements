@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const challenge = require("../models/challenge");
 const User = require("../models/user");
+const userData = require("../models/UserInfo");
 const bcrypt = require("bcrypt");
 
 //Home Page
@@ -31,12 +32,15 @@ router.post("/register", async (req, res) => {
   try {
     const { username, password } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
 
     try {
       const user = await User.create({
         username: username,
         password: hashedPassword,
+      });
+      const usersData = await userData.create({
+        username: username,
+        acceptedChallenges: [],
       });
       res.status(200).json({ message: "User created successfully", user });
     } catch (error) {

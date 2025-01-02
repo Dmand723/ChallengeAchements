@@ -21,11 +21,16 @@
 // });
 
 function editCheckboxFix() {
-  const checkbox = document.querySelector("#edit-challenge-checkbox");
-  if (checkbox.getAttribute("value") == "true") {
-    checkbox.setAttribute("checked", "true");
-  } else {
+  try {
+    const checkbox = document.querySelector("#edit-challenge-checkbox");
+    if (checkbox.getAttribute("released") == "true") {
+      checkbox.setAttribute("checked", "true");
+    } else {
+      return;
+    }
+  } catch (error) {
     return;
   }
 }
+
 editCheckboxFix();

@@ -208,11 +208,12 @@ router.get("/edit-challenge/:id", authMiddleware, async (req, res) => {
 });
 
 /**
- * PUT /edit-post
- * Admin -Edit Post
+ * PUT /edit-challenge
+ * Admin -Edit challenge
  */
 router.put("/edit-challenge/:id", authMiddleware, async (req, res) => {
   let released;
+  console.log(req.body);
   if (req.body.released === "on") {
     released = true;
   } else {
