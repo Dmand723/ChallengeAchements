@@ -38,15 +38,21 @@ router.get("/:username", authMiddleware, async (req, res) => {
     });
     let usersData = await userData.findOne({ username: req.params.username });
     usersData = usersData.acceptedChallenges;
+    let challengeTitles = [];
+    usersData.forEach((c) => {
+      challengeTitles.push(c.title);
+    });
 
     const userChallenges = await challenge.find({
-      title: { $in: usersData },
+      title: { $in: challengeTitles },
     });
+    console.log(usersData);
     res.render("UserHome", {
       locals,
       userChallenges,
       username: req.params.username,
       layout: userLayout,
+      usersData,
     });
   } catch (error) {
     console.log(error);
@@ -65,9 +71,13 @@ router.get("/:username/acceptChallenges", authMiddleware, async (req, res) => {
     });
     let usersData = await userData.findOne({ username: req.params.username });
     usersData = usersData.acceptedChallenges;
+    let challengeTitles = [];
+    usersData.forEach((c) => {
+      challengeTitles.push(c.title);
+    });
 
     let nonExeptedChallenges = challengeNameArry.filter(
-      (item) => !usersData.includes(item)
+      (item) => !challengeTitles.includes(item)
     );
     console.log(nonExeptedChallenges);
     let challengeArray = [];
@@ -84,9 +94,13 @@ router.put(
   authMiddleware,
   async (req, res) => {
     try {
+      const data = {
+        title: req.params.title,
+        compleated: false,
+      };
       await userData.findOneAndUpdate(
         { username: req.params.username },
-        { $push: { acceptedChallenges: req.params.title } }
+        { $push: { acceptedChallenges: data } }
       );
       res.redirect(`/user/${req.params.username}/acceptChallenges`);
     } catch (error) {
@@ -94,4 +108,24 @@ router.put(
     }
   }
 );
+
+// update challenge to be compleated
+router.put("/:username/:title", authMiddleware, async (req, res) => {
+  try {
+    await userData.updateOne(
+      {
+        username: req.params.username,
+        "acceptedChallenges.title": req.params.title,
+      }, // Filter for user1 and the specific challenge
+      {
+        $set: {
+          "acceptedChallenges.$.compleated": true, // Update the "compleated" field to true
+        },
+      }
+    );
+    res.redirect(`/user/${req.params.username}/`);
+  } catch (error) {
+    console.log(error);
+  }
+});
 module.exports = router;

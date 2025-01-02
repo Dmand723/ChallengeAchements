@@ -1,16 +1,24 @@
 <body>
   <div class="user-add-challenge-btn-headers">
-    <a href="<%=username%>/acceptChallenges" class="user-add-challenge-btn"
+    <a href="acceptChallenges" class="user-add-challenge-btn"
       >&#43; Add New Challenges</a
     >
   </div>
   <h1>Challenges</h1>
   <div class="challenge-cards">
-    <% userChallenges.forEach(challenge => { %>
+    <% let i = 0; userChallenges.forEach(challenge => { %>
     <div class="challenge-card">
       <span id="challenge-card-title"><%- challenge.title %></span> <br />
-      <span id="challenge-card-desc"><%- challenge.desc %></span>
+      <span id="challenge-card-desc"><%- challenge.desc %></span> <br />
+      <span id="challenge-card-compleated"
+        >Compleated: <%- usersData[i].compleated %></span
+      >
+      <% if (!usersData[i].compleated){ %>
+      <form action="<%= challenge.title %>?_method=PUT" method="POST">
+        <input type="submit" value="Compleate" class="btn" />
+      </form>
+      <% } %>
     </div>
-    <% }); %>
+    <% i++ }); %>
   </div>
 </body>
