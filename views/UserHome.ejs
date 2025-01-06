@@ -1,6 +1,6 @@
 <body>
   <div class="user-add-challenge-btn-headers">
-    <a href="acceptChallenges" class="user-add-challenge-btn"
+    <a href="<%=username%>/acceptChallenges" class="user-add-challenge-btn"
       >&#43; Add New Challenges</a
     >
   </div>
@@ -11,12 +11,23 @@
       <span id="challenge-card-title"><%- challenge.title %></span> <br />
       <span id="challenge-card-desc"><%- challenge.desc %></span> <br />
       <span id="challenge-card-compleated"
-        >Compleated: <%- usersData[i].compleated %></span
+        >Compleated: <%=usersData.find(user => user.title ==
+        challenge.title).compleated%>
+      </span>
+      <% if (!usersData.find(user => user.title ==
+      challenge.title).compleated){%>
+      <form
+        action="<%=username%>/<%= challenge.title %>?_method=PUT"
+        method="POST"
       >
-      <% if (!usersData[i].compleated){ %>
-      <form action="<%= challenge.title %>?_method=PUT" method="POST">
+        <input type="hidden" name="username" value="<%=username%>" />
         <input type="submit" value="Compleate" class="btn" />
       </form>
+      <% } else { %>
+      <p>
+        <%=(challenge.compleated.compleated / challenge.compleated.accepted)*100
+        %>% of people have compleated this challenge
+      </p>
       <% } %>
     </div>
     <% i++ }); %>

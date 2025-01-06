@@ -2,30 +2,15 @@ const express = require("express");
 const router = express.Router();
 const Post = require("../models/Post");
 const challenges = require("../models/challenge");
+const userInfo = require("../models/UserInfo");
 const adminUser = require("../models/AdminUser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { trusted } = require("mongoose");
+const challenge = require("../models/challenge");
 const jwtSecret = process.env.JWT_SECRET;
 const adminLayout = "../views/layouts/admin.ejs";
 
-// /**
-//  * Check Login Middleware
-//  */
-// const authMiddleware = (req, res, next) => {
-//   const token = req.cookies.token;
-
-//   if (!token) {
-//     return res.status(401).json({ message: "Unauthorized" });
-//   }
-//   try {
-//     const decoded = jwt.verify(token, jwtSecret);
-//     req.userId = decoded.userId;
-//     next();
-//   } catch (error) {
-//     return res.status(401).json({ message: "Unauthorized" });
-//   }
-// };
 const authMiddleware = async (req, res, next) => {
   const token = req.cookies.token;
   if (!token) {
@@ -50,43 +35,6 @@ const authMiddleware = async (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized" });
   }
 };
-/**
- * GET /
- * Admin - Check Login
- */
-// router.get("/", async (req, res) => {
-//   try {
-//     const locals = {
-//       title: "Admin",
-//       description: "A blog template made with NodeJS and ExpressJS",
-//     };
-//     res.render("admin/index", { locals, layout: adminLayout });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
-
-/**
- * POST /login
- * Admin - Login Account
- */
-// router.post("/", async (req, res) => {
-//   try {
-//     const { username, password } = req.body;
-
-//     const user = await adminUser.findOne({ username });
-
-//     if (!user) {
-//       return res.status(401).json({ message: "Invalid Credentials" });
-//     }
-
-//     const token = jwt.sign({ userID: user._id }, jwtSecret);
-//     res.cookie("token", token, { httpOnly: true });
-//     res.redirect("/admin/dashboard");
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
 
 /**
  * Get /dashboard
@@ -183,7 +131,7 @@ router.post("/add-challenge/", authMiddleware, async (req, res) => {
       category: req.body.category,
       released: released,
     };
-    await challenge.create(newChallenge);
+    await challenges.create(newChallenge);
     res.redirect("/admin/");
   } catch (error) {
     console.log(error);
@@ -230,16 +178,36 @@ router.put("/edit-challenge/:id", authMiddleware, async (req, res) => {
 });
 
 /**
- * DELETE /delete-post
- * Admin - Delete post
+ * DELETE /delete-challenge
+ * Admin - Delete challenge
  */
-router.delete("/delete-post/:id", authMiddleware, async (req, res) => {
+router.delete("/delete-challenge/:id", authMiddleware, async (req, res) => {
   try {
-    await Post.deleteOne({ _id: req.params.id });
-    res.redirect("/dashboard");
+    await challenges.deleteOne({ _id: req.params.id });
+    // const allUserInfo = await userInfo.find();
+    // allUserInfo.forEach((user) => {
+    //   userInfo.findOneAndUpdate(
+    //     { username: user.username }, // filter by username or _id
+    //     { $pull: { acceptedChallenges: { title: req.body.title } } } // remove the challenge with title "Challenge two"
+    //   );
+    // });
   } catch (error) {
     console.log(error);
   }
+  const allUserInfo = await userInfo.find();
+
+  for (const user of allUserInfo) {
+    try {
+      await userInfo.findOneAndUpdate(
+        { username: user.username }, // filter by username
+        { $pull: { acceptedChallenges: { title: req.body.title } } }, // remove challenge by title
+        { new: true } // optional: return the updated document
+      );
+    } catch (error) {
+      console.error("Error updating user:", user.username, error);
+    }
+  }
+  res.redirect("/admin");
 });
 
 module.exports = router;

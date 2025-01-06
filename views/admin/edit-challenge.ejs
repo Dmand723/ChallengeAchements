@@ -2,7 +2,11 @@
 <div class="admin-title">
   <h2>View / Edit Challenge</h2>
 
-  <form action="/delete-challenge/<%= data._id %>?_method=DELETE" method="POST">
+  <form
+    action="/admin/delete-challenge/<%= data._id %>?_method=DELETE"
+    method="POST"
+  >
+    <input type="hidden" name="title" value="<%=data.title%>" />
     <input type="submit" value="Delete" class="btn-delete btn" />
   </form>
 </div>
@@ -29,5 +33,10 @@
     id="edit-challenge-checkbox"
     released="<%= data.released %>"
   /><br />
+
+  <p>
+    <b>Completed/Accepted:</b>
+    <%=data.compleated.compleated%>/<%=data.compleated.accepted%>
+  </p>
   <input type="submit" value="Update" class="btn" />
 </form>

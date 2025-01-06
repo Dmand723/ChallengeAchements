@@ -38,6 +38,7 @@ router.get("/:username", authMiddleware, async (req, res) => {
     });
     let usersData = await userData.findOne({ username: req.params.username });
     usersData = usersData.acceptedChallenges;
+    usersData = usersData.reverse();
     let challengeTitles = [];
     usersData.forEach((c) => {
       challengeTitles.push(c.title);
@@ -46,7 +47,6 @@ router.get("/:username", authMiddleware, async (req, res) => {
     const userChallenges = await challenge.find({
       title: { $in: challengeTitles },
     });
-    console.log(usersData);
     res.render("UserHome", {
       locals,
       userChallenges,
@@ -79,7 +79,6 @@ router.get("/:username/acceptChallenges", authMiddleware, async (req, res) => {
     let nonExeptedChallenges = challengeNameArry.filter(
       (item) => !challengeTitles.includes(item)
     );
-    console.log(nonExeptedChallenges);
     let challengeArray = [];
     challengeArray = await challenge.find({
       title: { $in: nonExeptedChallenges },
@@ -89,20 +88,35 @@ router.get("/:username/acceptChallenges", authMiddleware, async (req, res) => {
     console.log(error);
   }
 });
+// Adding a new challege for the user
 router.put(
   "/:username/addChallenge/:title",
   authMiddleware,
   async (req, res) => {
     try {
-      const data = {
-        title: req.params.title,
-        compleated: false,
-      };
-      await userData.findOneAndUpdate(
-        { username: req.params.username },
-        { $push: { acceptedChallenges: data } }
-      );
-      res.redirect(`/user/${req.params.username}/acceptChallenges`);
+      let usersData = await userData.findOne({ username: req.params.username });
+      usersData = usersData.acceptedChallenges;
+      let acceptedTitles = [];
+      usersData.forEach((c) => {
+        acceptedTitles.push(c.title);
+      });
+      if (acceptedTitles.includes(req.params.title)) {
+        return;
+      } else {
+        const data = {
+          title: req.params.title,
+          compleated: false,
+        };
+        await userData.findOneAndUpdate(
+          { username: req.params.username },
+          { $push: { acceptedChallenges: data } }
+        );
+        await challenge.findOneAndUpdate(
+          { title: req.params.title },
+          { $inc: { "compleated.accepted": 1 } }
+        );
+        res.redirect(`/user/${req.params.username}/acceptChallenges`);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -112,6 +126,7 @@ router.put(
 // update challenge to be compleated
 router.put("/:username/:title", authMiddleware, async (req, res) => {
   try {
+    console.log(req.body);
     await userData.updateOne(
       {
         username: req.params.username,
@@ -123,10 +138,14 @@ router.put("/:username/:title", authMiddleware, async (req, res) => {
         },
       }
     );
-    res.redirect(`/user/${req.params.username}/`);
+    await challenge.findOneAndUpdate(
+      { title: req.params.title },
+      { $inc: { "compleated.compleated": 1 } }
+    );
+    res.redirect(`/user/${req.params.username}`);
   } catch (error) {
     console.log(error);
   }
 });
+
 module.exports = router;
-//FIX BUG WITH MAKING CHALLEGE COMPLEATED

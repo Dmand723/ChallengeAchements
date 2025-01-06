@@ -9,13 +9,6 @@
     <a href="/post/<%= challenge._id %>"><%= challenge.title %> &nearr;</a>
     <div class="admin-post-controls">
       <a href="/admin/edit-challenge/<%= challenge._id %>" class="btn">Edit</a>
-
-      <form
-        action="/admin/delete-challenge/<%= challenge._id %>?_method=DELETE"
-        method="post"
-      >
-        <input type="submit" value="Delete" class="btn-delete btn" />
-      </form>
     </div>
   </li>
   <% }); %>

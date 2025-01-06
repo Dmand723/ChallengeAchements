@@ -19,6 +19,10 @@ const challengeSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  compleated: {
+    type: Object,
+    default: { compleated: 0, accepted: 0 },
+  },
 });
 
 module.exports = mongoose.model("Challenge", challengeSchema);
