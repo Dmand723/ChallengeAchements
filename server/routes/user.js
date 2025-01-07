@@ -3,7 +3,7 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const challenge = require("../models/challenge");
 const userData = require("../models/UserInfo");
-const User = require("../models/user");
+const User = require("../models/User");
 //const userInfo = require("../models/UserInfo");\
 const userLayout = "../views/layouts/user.ejs";
 
