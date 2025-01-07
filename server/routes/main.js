@@ -21,7 +21,12 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/login", async (req, res) => {
-  res.render("login");
+  const token = req.cookies.token;
+  if (!token) {
+    res.render("login");
+  } else {
+    res.redirect(`/user/${token.username}`);
+  }
 });
 
 router.get("/register", async (req, res) => {

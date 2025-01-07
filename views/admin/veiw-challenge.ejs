@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="<%=locals.desc %>" />
+    <link rel="stylesheet" href="/css/styles.css" />
+    <link rel="shortcut icon" href="#" />
+    <title><%= locals.title %></title>
+  </head>
+  <div class="admin-challenges">
+    <h1 class="veiw-challenge-title">Title: <%-challenge.title%></h1>
+    <p class="veiw-challenge-desc">Description:<%-challenge.desc%></p>
+    <p class="veiw-challenge-category">Category: <%-challenge.category%></p>
+    <p class="veiw-challenge-completed">
+      <b>Completed/Accepted:</b>
+      <%=challenge.compleated.compleated%>/<%=challenge.compleated.accepted%>
+    </p>
+  </div>
+</html>

@@ -4,7 +4,6 @@ const bcrypt = require("bcrypt");
 const challenge = require("../models/challenge");
 const userData = require("../models/UserInfo");
 const User = require("../models/User");
-//const userInfo = require("../models/UserInfo");\
 const userLayout = "../views/layouts/user.ejs";
 
 const authMiddleware = async (req, res, next) => {
@@ -83,7 +82,11 @@ router.get("/:username/acceptChallenges", authMiddleware, async (req, res) => {
     challengeArray = await challenge.find({
       title: { $in: nonExeptedChallenges },
     });
-    res.render("acceptChallenges", { locals, challengeArray });
+    res.render("acceptChallenges", {
+      locals,
+      challengeArray,
+      username: req.params.username,
+    });
   } catch (error) {
     console.log(error);
   }

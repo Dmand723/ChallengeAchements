@@ -49,7 +49,7 @@ textarea {
   margin-bottom: 1rem;
 }
 
-.btn {
+/* .btn {
   background-color: var(--black);
   border: none;
   color: white;
@@ -62,15 +62,14 @@ textarea {
 .btn-delete {
   padding: 10px 16px;
   background-color: var(--red);
-}
+} */
 
 img {
   width: 100%;
   height: auto;
 }
 
-/* Layout */
-.container {
+Layout .container {
   max-width: 982px;
   margin: 0 auto;
   padding: 0 10px;
@@ -80,16 +79,16 @@ img {
   padding: 20px 0;
 }
 
-/* Hero Section */
-.hero-image {
+/*Hero Section*/
+/* .hero-image {
   max-height: 528px;
   filter: drop-shadow(0px 44px 34px rgba(0, 0, 0, 0.25));
   overflow: hidden;
   border-radius: var(--border-radius);
-}
+} */
 
 /* Main Header */
-.header {
+/* .header {
   display: grid;
   align-items: center;
   grid-template-columns: 1fr 1fr;
@@ -98,7 +97,7 @@ img {
     "logo button"
     "menu menu";
   padding-top: 10px;
-}
+} */
 
 @media only screen and (min-width: 768px) {
   .header {
@@ -107,7 +106,7 @@ img {
   }
 }
 
-.header__logo {
+/* .header__logo {
   font-weight: 800;
   font-size: 25px;
   text-decoration: none;
@@ -152,10 +151,10 @@ img {
 
 .header__button button:hover {
   border: 2px solid var(--black);
-}
+} */
 
 /* Header -> Navigation */
-.header__nav ul {
+/* .header__nav ul {
   list-style-type: none;
   display: flex;
   gap: 1rem;
@@ -174,10 +173,10 @@ img {
 
 .header__nav ul a:hover {
   text-decoration: underline;
-}
+} */
 
 /* Author - HomePage */
-.author {
+/* .author {
   padding: 10px 0;
   text-align: center;
 }
@@ -190,10 +189,10 @@ img {
 .author__body {
   font-size: var(--font-size-md);
   margin: 5px 0 40px 0;
-}
+} */
 
 /* Home Article List */
-.articles__heading {
+/* .articles__heading {
   margin-top: 4rem;
   font-weight: 400;
 }
@@ -221,7 +220,7 @@ img {
   justify-content: space-between;
   text-decoration: none;
   margin: 18px 0;
-}
+} */
 
 @media only screen and (min-width: 768px) {
   .article-ul li a {
@@ -234,7 +233,7 @@ img {
   }
 }
 
-.article-ul li {
+/* .article-ul li {
   font-size: 24px;
   cursor: pointer;
   transition: filter 0.1s;
@@ -258,16 +257,16 @@ img {
 
 .article {
   white-space: pre-wrap;
-}
+} */
 
 /* Footer */
-.footer {
+/* .footer {
   margin: 4rem;
   text-align: center;
-}
+} */
 
 /* SeachBar */
-.searchBar {
+/* .searchBar {
   visibility: hidden;
   transform: translateY(-100px);
   background-color: var(--black);
@@ -308,18 +307,18 @@ img {
 }
 .pagination:hover {
   color: var(--black);
-}
+} */
 
 /* Dashboard Admin */
-.admin-title {
+/* .admin-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
+} */
 ul {
   text-decoration: none;
 }
-.admin-posts {
+/* .admin-posts {
   padding: 0;
   margin: 0;
 }
@@ -343,11 +342,12 @@ ul {
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
-}
+} */
+
 /* REAL CSS */
 /* User Home Page */
 /* all current colors are placehodlers */
-.user-add-challenge-btn {
+/* .user-add-challenge-btn {
   color: green;
   text-decoration: none;
   display: inline-block;
@@ -371,4 +371,4 @@ ul {
 
 .challenge-card {
   background-color: antiquewhite;
-}
+} */

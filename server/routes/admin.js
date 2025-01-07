@@ -53,34 +53,6 @@ router.get("/", authMiddleware, async (req, res) => {
   }
 });
 /**
- * POST /register
- * Admin - Register Account
- */
-router.post("/register", async (req, res) => {
-  try {
-    const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    try {
-      const user = await adminUser.create({
-        username: username,
-        password: hashedPassword,
-      });
-      res.status(200).json({ message: "User created successfully", user });
-    } catch (error) {
-      console.log(error.status);
-      if (error == 11000) {
-        return req.status(500).json({ message: "User already Exists!" });
-      } else {
-        return res
-          .status(500)
-          .json({ message: "Something went wrong with the server! " });
-      }
-    }
-  } catch {
-    console.log(error);
-  }
-});
 
 /**
  * Get /logout
@@ -96,8 +68,8 @@ router.get("/logout", authMiddleware, async (req, res) => {
 });
 
 /**
- * GET /add-post
- * Admin - Create New Post
+ * GET /add-challenge
+ * Admin - Create New challenge
  */
 router.get("/add-challenge", authMiddleware, async (req, res) => {
   try {
@@ -113,8 +85,8 @@ router.get("/add-challenge", authMiddleware, async (req, res) => {
 });
 
 /**
- * POST /add-post
- * Admin - Create New Post
+ * POST /add-challenge
+ * Admin - Create New challenge
  */
 router.post("/add-challenge/", authMiddleware, async (req, res) => {
   try {
@@ -139,8 +111,8 @@ router.post("/add-challenge/", authMiddleware, async (req, res) => {
 });
 
 /**
- * Get /edit-post
- * Admin - Update Post
+ * Get /edit-challenge
+ * Admin - Update Challenge
  */
 router.get("/edit-challenge/:id", authMiddleware, async (req, res) => {
   try {
@@ -184,13 +156,6 @@ router.put("/edit-challenge/:id", authMiddleware, async (req, res) => {
 router.delete("/delete-challenge/:id", authMiddleware, async (req, res) => {
   try {
     await challenges.deleteOne({ _id: req.params.id });
-    // const allUserInfo = await userInfo.find();
-    // allUserInfo.forEach((user) => {
-    //   userInfo.findOneAndUpdate(
-    //     { username: user.username }, // filter by username or _id
-    //     { $pull: { acceptedChallenges: { title: req.body.title } } } // remove the challenge with title "Challenge two"
-    //   );
-    // });
   } catch (error) {
     console.log(error);
   }
@@ -200,8 +165,7 @@ router.delete("/delete-challenge/:id", authMiddleware, async (req, res) => {
     try {
       await userInfo.findOneAndUpdate(
         { username: user.username }, // filter by username
-        { $pull: { acceptedChallenges: { title: req.body.title } } }, // remove challenge by title
-        { new: true } // optional: return the updated document
+        { $pull: { acceptedChallenges: { title: req.body.title } } } // remove challenge by title
       );
     } catch (error) {
       console.error("Error updating user:", user.username, error);
@@ -210,4 +174,22 @@ router.delete("/delete-challenge/:id", authMiddleware, async (req, res) => {
   res.redirect("/admin");
 });
 
+//Veiw challenge
+router.get("/veiw-challenge/:id", authMiddleware, async (req, res) => {
+  try {
+    const challenge = await challenges.findOne({ _id: req.params.id });
+    console.log(challenge);
+    const locals = {
+      title: challenge.title,
+      desc: `veiw page for challenge: ${challenge.title}`,
+    };
+    res.render("admin/veiw-challenge", {
+      locals,
+      challenge,
+      layout: adminLayout,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
 module.exports = router;
