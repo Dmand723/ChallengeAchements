@@ -8,13 +8,22 @@
     <link rel="shortcut icon" href="#" />
     <title><%= locals.title %></title>
   </head>
+
   <div class="admin-challenges">
-    <h1 class="veiw-challenge-title">Title: <%-challenge.title%></h1>
-    <p class="veiw-challenge-desc">Description:<%-challenge.desc%></p>
-    <p class="veiw-challenge-category">Category: <%-challenge.category%></p>
+    <h1 class="veiw-challenge-title">
+      Chalenge Title: <br /><%-challenge.title%>
+    </h1>
+    <h2 class="veiw-challenge-category">Category: <%-challenge.category%></h2>
+    <label for="veiw-challenge-desc" class="veiw-challenge-desc-label"
+      >Description:</label
+    >
+    <textarea name="desc" id="veiw-challenge-desc" readonly>
+<%-challenge.desc%></textarea
+    >
     <p class="veiw-challenge-completed">
       <b>Completed/Accepted:</b>
       <%=challenge.compleated.compleated%>/<%=challenge.compleated.accepted%>
     </p>
+    <a class="veiw-challenge-back-btn btn" href="/admin">Back</a>
   </div>
 </html>

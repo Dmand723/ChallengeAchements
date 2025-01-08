@@ -5,6 +5,13 @@
   --gray: #7e7e7e;
   --gray-light: #e4e4e4;
   --red: #b30000;
+  --Buff: #cb997e;
+  --Champagne-pink: #eddcd2;
+  --Linen: #fff1e6;
+  --Isabelline: #f0efeb;
+  --Desert-sand: #ddbea9;
+  --Sage: #a5a58d;
+  --Ash-gray: #b7b7a4;
   --font-size-base: 1rem;
   --font-size-md: clamp(1.25rem, 0.61vw + 1.1rem, 1.58rem);
   --font-size-lg: clamp(1.56rem, 1vw + 1.31rem, 2.11rem);
@@ -16,9 +23,10 @@ body {
   font-family: "Poppins", sans-serif;
   color: var(--black);
   font-size: var(--font-size-base);
-  background-color: #faf5ee;
+  background-color: var(--Champagne-pink);
   background-image: url("/img/img-noise-361x370.png");
   margin: 0;
+  text-align: center;
 }
 
 a {
@@ -46,7 +54,9 @@ textarea {
   box-sizing: border-box;
   width: 100%;
   padding: 0.7rem 0.75rem;
+  margin: auto;
   margin-bottom: 1rem;
+  max-width: 50vw;
 }
 
 .btn {
@@ -131,14 +141,26 @@ ul {
 /* User Home Page */
 /* all current colors are placehodlers */
 .user-add-challenge-btn {
-  color: green;
+  color: var(--Buff);
   text-decoration: none;
   display: inline-block;
   border: 0;
   text-decoration: none;
-  font-size: 0.8rem;
+  font-size: 20px;
   padding: 4px 8px;
   line-height: 3;
+}
+
+.logout-btn {
+  background-color: var(--Sage);
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
+  position: static;
+  x: 100;
 }
 
 #challenge-card-title {
@@ -148,14 +170,40 @@ ul {
 
 .challenge-cards {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   flex-wrap: wrap;
 }
 
 .challenge-card {
-  background-color: antiquewhite;
+  background-color: var(--Sage);
+  margin: 30px;
+  padding: 20px;
 }
-
+.challenge-card-desc {
+  resize: none;
+  border: none;
+  background-color: var(--Ash-gray);
+}
+.challenge-card-desc:focus {
+  outline: none;
+}
+.challenge-options {
+  text-align: center;
+  margin: auto;
+  max-width: 30vw;
+  background-color: var(--Ash-gray);
+}
+.challenge-options p {
+  display: inline-block;
+  margin: 10px;
+  font-weight: bold;
+}
+.challenge-options a {
+  text-decoration: none;
+}
+.option-selected a {
+  color: var(--Buff);
+}
 .admin-challenges {
   display: flex;
   flex-direction: column;
@@ -178,17 +226,43 @@ ul {
   color: #646464;
 }
 .footer {
-  position: fixed;
-  bottom: 10px;
+  position: relative;
 }
 
 .websiteHeader {
-  background-color: white;
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 1vh;
+  left: 1vw;
 }
-
+.websiteHeader img {
+  width: 30px;
+}
 .websiteHeader a {
   text-decoration: none;
+}
+
+#veiw-challenge-desc {
+  width: 30vw;
+  max-width: 600px;
+  height: 30vh;
+  max-height: 500px;
+}
+
+.veiw-challenge-title {
+  text-align: center;
+}
+.veiw-challenge-desc-label {
+  font-weight: 600;
+  font-size: 30px;
+}
+
+.home-btns {
+  background-color: var(--Sage);
+  width: 300px;
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-decoration: none;
+  margin: 4px 2px;
+  cursor: pointer;
 }

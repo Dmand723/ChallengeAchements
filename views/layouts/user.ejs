@@ -8,11 +8,9 @@
     <link rel="shortcut icon" href="#" />
     <title><%= locals.title %></title>
   </head>
-  <header class="websiteHeader">
-    <h3><a href="/">Challenge Achevements</a></h3>
-  </header>
+  <%-include("../partials/header.ejs")%>
   <form action="/logout">
-    <input type="submit" value="Logout" id="logout-btn" />
+    <input type="submit" value="Logout" class="logout-btn" /><br />
   </form>
   <body>
     <div class="container">

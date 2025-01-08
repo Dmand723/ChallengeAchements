@@ -5,10 +5,7 @@ const challenges = require("../models/challenge");
 const userInfo = require("../models/UserInfo");
 const adminUser = require("../models/AdminUser");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const { trusted } = require("mongoose");
-const challenge = require("../models/challenge");
-const jwtSecret = process.env.JWT_SECRET;
 const adminLayout = "../views/layouts/admin.ejs";
 
 const authMiddleware = async (req, res, next) => {
@@ -90,7 +87,15 @@ router.get("/add-challenge", authMiddleware, async (req, res) => {
  */
 router.post("/add-challenge/", authMiddleware, async (req, res) => {
   try {
-    console.log(req.body);
+    const challengeNameExist = await challenges.findOne({
+      title: req.body.title,
+    });
+    if (challengeNameExist) {
+      res
+        .status(400)
+        .json({ message: "challenge with that tittle already exists" });
+      return;
+    }
     let released;
     if (req.body.released == "on") {
       released = true;

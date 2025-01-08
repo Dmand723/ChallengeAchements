@@ -5,11 +5,26 @@
     >
   </div>
   <h1>Challenges</h1>
+  <div class="challenge-options">
+    <p class="<%-optionsClass.all%>" class="option-active">
+      <a href="/user/<%-username%>">All Tasks</a>
+    </p>
+    <p class="<%-optionsClass.completed%>">
+      <a href="/user/<%-username%>/completed">Completed Tasks</a>
+    </p>
+    <p class="<%-optionsClass.incomplete%>">
+      <a href="/user/<%-username%>/incomplete">Incomplete Tasks</a>
+    </p>
+  </div>
   <div class="challenge-cards">
     <% let i = 0; userChallenges.forEach(challenge => { %>
     <div class="challenge-card">
       <span id="challenge-card-title"><%- challenge.title %></span> <br />
-      <span id="challenge-card-desc"><%- challenge.desc %></span> <br />
+      <label for="card-desc">Description:</label>
+      <textarea id="card-desc" class="challenge-card-desc" readonly>
+<%- challenge.desc %></textarea
+      >
+      <br />
       <span id="challenge-card-compleated"
         >Compleated: <%=usersData.find(user => user.title ==
         challenge.title).compleated%>

@@ -24,18 +24,21 @@ const authMiddleware = async (req, res, next) => {
     return res.status(401).json({ message: "Unauthorized " });
   }
 };
+//user home showing all challenges
 router.get("/:username", authMiddleware, async (req, res) => {
   try {
     const locals = {
       title: "Home Page",
-      description: `A Home Page For user: ${req.params.username}`,
+      description: `A Home Page For user: ${req.params.username} (all challenges)`,
     };
     const allChallenges = await challenge.find({});
     let challengeNameArry = [];
     allChallenges.forEach((challenge) => {
       challengeNameArry.push(challenge.title);
     });
-    let usersData = await userData.findOne({ username: req.params.username });
+    let usersData = await userData.findOne({
+      username: req.params.username,
+    });
     usersData = usersData.acceptedChallenges;
     usersData = usersData.reverse();
     let challengeTitles = [];
@@ -52,11 +55,102 @@ router.get("/:username", authMiddleware, async (req, res) => {
       username: req.params.username,
       layout: userLayout,
       usersData,
+      optionsClass: {
+        all: "challenge-options-all option-selected",
+        completed: "challenge-options-completed",
+        incomplete: "challenge-options-incomplete",
+      },
     });
   } catch (error) {
     console.log(error);
   }
 });
+
+//Veiw challenges that are completed
+router.get("/:username/completed", authMiddleware, async (req, res) => {
+  try {
+    const locals = {
+      title: "Home Page",
+      description: `A Home Page For user: ${req.params.username} (completed challenges)`,
+    };
+    const allChallenges = await challenge.find({});
+    let challengeNameArry = [];
+    allChallenges.forEach((challenge) => {
+      challengeNameArry.push(challenge.title);
+    });
+    let usersData = await userData.findOne({
+      username: req.params.username,
+    });
+
+    usersData = usersData.acceptedChallenges;
+    usersData = usersData.reverse();
+    usersData = usersData.filter((c) => c.compleated == true);
+    let challengeTitles = [];
+    usersData.forEach((c) => {
+      challengeTitles.push(c.title);
+    });
+    const userChallenges = await challenge.find({
+      title: { $in: challengeTitles },
+    });
+    res.render("UserHome", {
+      locals,
+      userChallenges,
+      username: req.params.username,
+      layout: userLayout,
+      usersData,
+      optionsClass: {
+        all: "challenge-options-all ",
+        completed: "challenge-options-completed option-selected",
+        incomplete: "challenge-options-incomplete",
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+//Veiw challenges that are incomplete
+router.get("/:username/incomplete", authMiddleware, async (req, res) => {
+  try {
+    const locals = {
+      title: "Home Page",
+      description: `A Home Page For user: ${req.params.username} (incomplete challenges)`,
+    };
+    const allChallenges = await challenge.find({});
+    let challengeNameArry = [];
+    allChallenges.forEach((challenge) => {
+      challengeNameArry.push(challenge.title);
+    });
+    let usersData = await userData.findOne({
+      username: req.params.username,
+    });
+    usersData = usersData.acceptedChallenges;
+    usersData = usersData.reverse();
+    usersData = usersData.filter((c) => c.compleated == false);
+    let challengeTitles = [];
+    usersData.forEach((c) => {
+      challengeTitles.push(c.title);
+    });
+
+    const userChallenges = await challenge.find({
+      title: { $in: challengeTitles },
+    });
+    res.render("UserHome", {
+      locals,
+      userChallenges,
+      username: req.params.username,
+      layout: userLayout,
+      usersData,
+      optionsClass: {
+        all: "challenge-options-all",
+        completed: "challenge-options-completed",
+        incomplete: "challenge-options-incomplete option-selected",
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 router.get("/:username/acceptChallenges", authMiddleware, async (req, res) => {
   try {
     const locals = {
