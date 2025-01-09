@@ -47,7 +47,10 @@ router.post("/register", async (req, res) => {
         username: username,
         acceptedChallenges: [],
       });
-      res.status(200).json({ message: "User created successfully", user });
+
+      const token = user;
+      res.cookie(`token`, token, { httpOnly: true });
+      res.redirect(`/user/${username}`);
     } catch (error) {
       console.log(error);
       if (error == 11000) {
