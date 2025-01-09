@@ -21,9 +21,7 @@
     <div class="challenge-card">
       <span id="challenge-card-title"><%- challenge.title %></span> <br />
       <label for="card-desc">Description:</label>
-      <textarea id="card-desc" class="challenge-card-desc" readonly>
-<%- challenge.desc %></textarea
-      >
+      <p id="card-desc" class="challenge-card-desc"><%- challenge.desc %></p>
       <br />
       <span id="challenge-card-compleated"
         >Compleated: <%=usersData.find(user => user.title ==

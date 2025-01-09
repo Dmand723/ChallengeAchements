@@ -178,6 +178,7 @@ ul {
   background-color: var(--Sage);
   margin: 30px;
   padding: 20px;
+  max-width: 340px;
 }
 .challenge-card-desc {
   resize: none;
@@ -195,7 +196,7 @@ ul {
 }
 .challenge-options p {
   display: inline-block;
-  margin: 10px;
+  margin: 20px;
   font-weight: bold;
 }
 .challenge-options a {
