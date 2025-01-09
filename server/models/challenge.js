@@ -19,6 +19,10 @@ const challengeSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  minDayReq: {
+    type: Number,
+    default: 0,
+  },
   compleated: {
     type: Object,
     default: { compleated: 0, accepted: 0 },
