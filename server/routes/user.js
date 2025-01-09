@@ -31,7 +31,7 @@ router.get("/:username", authMiddleware, async (req, res) => {
       title: "Home Page",
       description: `A Home Page For user: ${req.params.username} (all challenges)`,
     };
-    const allChallenges = await challenge.find({});
+    const allChallenges = await challenge.find({ released: true });
     let challengeNameArry = [];
     allChallenges.forEach((challenge) => {
       challengeNameArry.push(challenge.title);
@@ -40,6 +40,38 @@ router.get("/:username", authMiddleware, async (req, res) => {
       username: req.params.username,
     });
     usersData = usersData.acceptedChallenges;
+    //check if challenge can be compleated
+    // Convert strings to Date objects
+    usersData.forEach((c) => {
+      let dateToComplete = c.minDateToComplete;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (today >= dateToComplete) {
+        userData.updateOne(
+          {
+            username: req.params.username,
+            "acceptedChallenges.title": c.title,
+          }, // Filter for user1 and the specific challenge
+          {
+            $set: {
+              "acceptedChallenges.$.canComplete": true,
+            },
+          }
+        );
+      } else {
+        userData.updateOne(
+          {
+            username: req.params.username,
+            "acceptedChallenges.title": c.title,
+          }, // Filter for user1 and the specific challenge
+          {
+            $set: {
+              "acceptedChallenges.$.canComplete": false,
+            },
+          }
+        );
+      }
+    });
     usersData = usersData.reverse();
     let challengeTitles = [];
     usersData.forEach((c) => {
@@ -191,6 +223,9 @@ router.put(
   authMiddleware,
   async (req, res) => {
     try {
+      const thischallenge = await challenge.findOne({
+        title: req.params.title,
+      });
       let usersData = await userData.findOne({ username: req.params.username });
       usersData = usersData.acceptedChallenges;
       let acceptedTitles = [];
@@ -200,9 +235,24 @@ router.put(
       if (acceptedTitles.includes(req.params.title)) {
         return;
       } else {
+        const date = new Date();
+
+        // Set the time to midnight for both today and givenDate
+        date.setHours(0, 0, 0, 0);
+
+        // Add 30 days to today's date (ignoring time)
+        const futureDate = new Date(date);
+        futureDate.setDate(date.getDate() + thischallenge.minDayReq);
+
+        // Also set the time of givenDate to midnight
+        futureDate.setHours(0, 0, 0, 0);
+        //console.log(date, futureDate);
         const data = {
           title: req.params.title,
+          dataAccepted: date,
+          minDateToComplete: futureDate,
           compleated: false,
+          canComplete: false,
         };
         await userData.findOneAndUpdate(
           { username: req.params.username },
