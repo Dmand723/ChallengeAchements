@@ -28,7 +28,8 @@
         challenge.title).compleated%>
       </span>
       <% if (!usersData.find(user => user.title ==
-      challenge.title).compleated){%>
+      challenge.title).compleated){%> <% if (usersData.find(user => user.title
+      == challenge.title).canComplete){%>
       <form
         action="<%=username%>/<%= challenge.title %>?_method=PUT"
         method="POST"
@@ -37,9 +38,14 @@
         <input type="submit" value="Compleate" class="btn" />
       </form>
       <% } else { %>
+      <p><b>This challenge can not be compleated yet</b></p>
+      <% }%> <% } else { %>
       <p>
-        <%=(challenge.compleated.compleated / challenge.compleated.accepted)*100
-        %>% of people have compleated this challenge
+        <b>
+          <%=(challenge.compleated.compleated /
+          challenge.compleated.accepted)*100 %>% of people have compleated this
+          challenge</b
+        >
       </p>
       <% } %>
     </div>
